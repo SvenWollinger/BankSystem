@@ -13,6 +13,10 @@ public class BankAccount {
         this.money = money;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
     @Override
     public String toString() {
         return username + " " + pinHash + " " + money;
