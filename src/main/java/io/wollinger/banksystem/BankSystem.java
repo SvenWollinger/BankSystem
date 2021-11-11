@@ -118,7 +118,11 @@ public class BankSystem {
     }
 
     private void delete() {
-        //TODO: Add code
+        if(currentUser != null) {
+            users.remove(currentUser.getUsername().toLowerCase());
+            currentUser = null;
+        }
+        showMenu(MenuPage.MAIN);
     }
 
     private void println(String string) {
