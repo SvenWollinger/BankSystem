@@ -1,10 +1,9 @@
 package io.wollinger.banksystem;
 
+import io.wollinger.banksystem.utils.HashUtils;
 import io.wollinger.banksystem.utils.Utils;
 
 import java.math.BigDecimal;
-import java.text.NumberFormat;
-import java.util.Locale;
 
 public class BankAccount {
     private final String username;
@@ -25,8 +24,8 @@ public class BankAccount {
         pinHash = hash;
     }
 
-    public String getPasswordHash() {
-        return pinHash;
+    public boolean checkPassword(String password) {
+        return HashUtils.authenticate(password, pinHash);
     }
 
     public void addBalance(BigDecimal amount) {

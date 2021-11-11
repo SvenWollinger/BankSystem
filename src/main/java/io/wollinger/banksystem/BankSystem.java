@@ -75,7 +75,7 @@ public class BankSystem {
         println("Password change\n");
         print("Old password: ");
         String inputOldPassword = ScannerUtils.nextLine();
-        if(!HashUtils.authenticate(inputOldPassword, currentUser.getPasswordHash())) {
+        if(!currentUser.checkPassword(inputOldPassword)) {
             println("\nWrong password! Press any key to continue...");
             Utils.pause();
             showMenu(MenuPage.MENU_LOGGEDIN);
@@ -165,7 +165,7 @@ public class BankSystem {
         String idUsername = inputUsername.toLowerCase();
         if(users.containsKey(idUsername)) {
             BankAccount user = users.get(idUsername);
-            if(HashUtils.authenticate(inputPassword, user.getPasswordHash())) {
+            if(user.checkPassword(inputPassword)) {
                 currentUser = user;
                 showMenu(MenuPage.MENU_LOGGEDIN);
             }
