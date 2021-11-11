@@ -11,6 +11,8 @@ public class BankSystem {
     private BankAccount currentUser;
     private HashMap<String, BankAccount> users = new HashMap<>();
 
+    private final static int MIN_PASS_LENGTH = 4;
+
     enum MenuPage { MAIN, MENU_LOGGEDIN, REGISTER, LOGIN, WITHDRAW, DEPOSIT}
 
     public BankSystem() {
@@ -39,8 +41,8 @@ public class BankSystem {
 
         print("Password: ");
         String inputPassword = ScannerUtils.nextLine();
-        if(inputPassword.length() < 10) {
-            println("Password needs to be atleast 10 characters! Press any key to restart.");
+        if(inputPassword.length() < MIN_PASS_LENGTH) {
+            println("Password needs to be atleast " + MIN_PASS_LENGTH + " characters! Press any key to restart.");
             Utils.pause();
             menuRegister();
         }
@@ -52,7 +54,22 @@ public class BankSystem {
     }
 
     private void menuLogin() {
+        Utils.clearConsole();
+        println("Login\n");
+        print("Username: ");
+        String inputUsername = ScannerUtils.nextLine();
+        print("Password: ");
+        String inputPassword = ScannerUtils.nextLine();
 
+        if(users.containsKey(inputUsername)) {
+            if(HashUtils.authenticate(inputPassword, users.get(inputUsername).getPasswordHash())) {
+                currentUser = users.get(inputUsername);
+                showMenu(MenuPage.MENU_LOGGEDIN);
+            }
+        }
+        println("Wrong username or password! Press any key to continue!");
+        Utils.pause();
+        showMenu(MenuPage.MAIN);
     }
 
     private void menuMain() {

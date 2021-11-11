@@ -17,6 +17,10 @@ public class BankAccount {
         return username;
     }
 
+    public String getPasswordHash() {
+        return pinHash;
+    }
+
     public BigDecimal getBalance() {
         return balance;
     }
