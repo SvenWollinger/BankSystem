@@ -31,9 +31,11 @@ public class BankSystem {
 
     private void menuRegister() {
         Utils.clearConsole();
-        println("Register\n");
+        println("Register (Write !q to return)\n");
         print("Username: ");
         String inputUsername = ScannerUtils.nextLine();
+        if(inputUsername.equals("!q"))
+            showMenu(MenuPage.MAIN);
         if(users.containsKey(inputUsername.toLowerCase())) {
             println("Username already taken! Please choose another one! Press any key to restart.");
             Utils.pause();
@@ -56,9 +58,11 @@ public class BankSystem {
 
     private void menuLogin() {
         Utils.clearConsole();
-        println("Login\n");
+        println("Login (Write !q to return)\n");
         print("Username: ");
         String inputUsername = ScannerUtils.nextLine();
+        if(inputUsername.equals("!q"))
+            showMenu(MenuPage.MAIN);
         print("Password: ");
         String inputPassword = ScannerUtils.nextLine();
 
