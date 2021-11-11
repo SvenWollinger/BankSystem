@@ -6,11 +6,10 @@ import io.wollinger.banksystem.utils.Utils;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
-import java.util.Locale;
 
 public class BankSystem {
     private BankAccount currentUser;
-    private HashMap<String, BankAccount> users = new HashMap<>();
+    private final HashMap<String, BankAccount> users = new HashMap<>();
 
     private final static int MIN_PASS_LENGTH = 4;
     private final static String CURRENCY_SYMBOL = "$";
