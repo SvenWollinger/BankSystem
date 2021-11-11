@@ -17,6 +17,10 @@ public class BankAccount {
         return username;
     }
 
+    public void setPasswordHash(String hash) {
+        pinHash = hash;
+    }
+
     public String getPasswordHash() {
         return pinHash;
     }

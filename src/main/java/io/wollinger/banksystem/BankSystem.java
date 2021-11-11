@@ -5,6 +5,7 @@ import io.wollinger.banksystem.utils.ScannerUtils;
 import io.wollinger.banksystem.utils.Utils;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class BankSystem {
@@ -14,7 +15,9 @@ public class BankSystem {
     private final static int MIN_PASS_LENGTH = 4;
     private final static String CURRENCY_SYMBOL = "$";
 
-    enum MenuPage { MAIN, MENU_LOGGEDIN, REGISTER, LOGIN, WITHDRAW, DEPOSIT}
+    private final char[] SPECIAL_CHARS = {'!', '"', '$', '%', '&', '/', '(', ')', '=', '?'};
+
+    enum MenuPage { MAIN, MENU_LOGGEDIN, REGISTER, LOGIN, WITHDRAW, DEPOSIT, TRANSFER, PASSWD_CHANGE}
 
     public BankSystem() {
 
@@ -28,7 +31,44 @@ public class BankSystem {
             case LOGIN: menuLogin();
             case WITHDRAW: menuWithdraw();
             case DEPOSIT: menuDeposit();
+            case TRANSFER: menuTransfer();
+            case PASSWD_CHANGE: menuPasswordChange();
         }
+    }
+
+    private void menuTransfer() {
+        if(currentUser == null)
+            showMenu(MenuPage.MAIN);
+        Utils.clearConsole();
+    }
+
+    private void menuPasswordChange() {
+        if(currentUser == null)
+            showMenu(MenuPage.MAIN);
+        Utils.clearConsole();
+
+        println("Password change\n");
+        print("Old password: ");
+        String inputOldPassword = ScannerUtils.nextLine();
+        if(!HashUtils.authenticate(inputOldPassword, currentUser.getPasswordHash())) {
+            println("\nWrong password! Press any key to continue...");
+            Utils.pause();
+            showMenu(MenuPage.MENU_LOGGEDIN);
+        }
+        print("New password: ");
+        String newPassword = ScannerUtils.nextLine();
+
+        if (!isValidPassword(newPassword)) {
+            println("\n" + invalidPasswordMessage());
+            println("Press any key to continue.");
+            Utils.pause();
+            showMenu(MenuPage.MENU_LOGGEDIN);
+        }
+
+        currentUser.setPasswordHash(HashUtils.hash(newPassword));
+        println("\nDone! Press any key to continue.");
+        Utils.pause();
+        showMenu(MenuPage.MENU_LOGGEDIN);
     }
 
     private void menuWithdraw() {
@@ -81,8 +121,9 @@ public class BankSystem {
 
         print("Password: ");
         String inputPassword = ScannerUtils.nextLine();
-        if(inputPassword.length() < MIN_PASS_LENGTH) {
-            println("Password needs to be atleast " + MIN_PASS_LENGTH + " characters! Press any key to restart.");
+        if(!isValidPassword(inputPassword)) {
+            println("\n" + invalidPasswordMessage());
+            println("Press any key to continue.");
             Utils.pause();
             menuRegister();
         }
@@ -141,14 +182,18 @@ public class BankSystem {
         println("Current balance: " + currentUser.getBalance() + CURRENCY_SYMBOL);
         println("1] Withdraw");
         println("2] Deposit");
-        println("3] Logout");
-        println("4] Delete Account");
+        println("3] Transfer");
+        println("4] Change password");
+        println("5] Logout");
+        println("6] Delete Account");
         final int input = ScannerUtils.nextInt();
         switch(input) {
             case 1: showMenu(MenuPage.WITHDRAW); break;
             case 2: showMenu(MenuPage.DEPOSIT); break;
-            case 3: logout(); break;
-            case 4: delete(); break;
+            case 3: showMenu(MenuPage.TRANSFER); break;
+            case 4: showMenu(MenuPage.PASSWD_CHANGE); break;
+            case 5: logout(); break;
+            case 6: delete(); break;
             default: menuLoggedIn();
         }
     }
@@ -164,6 +209,23 @@ public class BankSystem {
             currentUser = null;
         }
         showMenu(MenuPage.MAIN);
+    }
+
+    private String invalidPasswordMessage() {
+        return "Password needs to be atleast " + MIN_PASS_LENGTH + " characters and contain atleast one of these special characters: " + Arrays.toString(SPECIAL_CHARS) + "!";
+    }
+
+    private boolean isValidPassword(String password) {
+        if(password.length() < MIN_PASS_LENGTH)
+            return false;
+        boolean containsSpecialChar = false;
+        for(char c : SPECIAL_CHARS) {
+            if(password.contains(c + "")) {
+                containsSpecialChar = true;
+                break;
+            }
+        }
+        return containsSpecialChar;
     }
 
     private void println(String string) {
