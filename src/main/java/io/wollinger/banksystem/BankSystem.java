@@ -28,20 +28,20 @@ public class BankSystem {
 
     public void showMenu(MenuPage page) {
         switch(page) {
-            case MAIN: menuMain();
-            case MENU_LOGGEDIN: menuLoggedIn();
-            case REGISTER: menuRegister();
-            case LOGIN: menuLogin();
-            case WITHDRAW: menuWithdraw();
-            case DEPOSIT: menuDeposit();
-            case TRANSFER: menuTransfer();
-            case PASSWD_CHANGE: menuPasswordChange();
+            case MAIN: menuMain(); break;
+            case MENU_LOGGEDIN: menuLoggedIn(); break;
+            case REGISTER: menuRegister(); break;
+            case LOGIN: menuLogin(); break;
+            case WITHDRAW: menuWithdraw(); break;
+            case DEPOSIT: menuDeposit(); break;
+            case TRANSFER: menuTransfer(); break;
+            case PASSWD_CHANGE: menuPasswordChange(); break;
         }
     }
 
     private void menuTransfer() {
         if(currentUser == null)
-            showMenu(MenuPage.MAIN);
+            return;
         Utils.clearConsole();
 
         println("Transfer\n");
@@ -64,12 +64,11 @@ public class BankSystem {
             println("\nNot enough balance!\nPress any key to continue.");
         }
         Utils.pause();
-        showMenu(MenuPage.MENU_LOGGEDIN);
     }
 
     private void menuPasswordChange() {
         if(currentUser == null)
-            showMenu(MenuPage.MAIN);
+            return;
         Utils.clearConsole();
 
         println("Password change\n");
@@ -78,7 +77,7 @@ public class BankSystem {
         if(!currentUser.checkPassword(inputOldPassword)) {
             println("\nWrong password! Press any key to continue...");
             Utils.pause();
-            showMenu(MenuPage.MENU_LOGGEDIN);
+            return;
         }
         print("New password: ");
         String newPassword = ScannerUtils.nextLine();
@@ -87,18 +86,17 @@ public class BankSystem {
             println("\n" + invalidPasswordMessage());
             println("Press any key to continue.");
             Utils.pause();
-            showMenu(MenuPage.MENU_LOGGEDIN);
+            return;
         }
 
         currentUser.setPasswordHash(HashUtils.hash(newPassword));
         println("\nDone! Press any key to continue.");
         Utils.pause();
-        showMenu(MenuPage.MENU_LOGGEDIN);
     }
 
     private void menuWithdraw() {
         if(currentUser == null)
-            showMenu(MenuPage.MAIN);
+            return;
         Utils.clearConsole();
         println("Current balance: " + currentUser.getBalanceString() + CURRENCY_SYMBOL + "\n");
         print("Withdraw amount: ");
@@ -108,12 +106,11 @@ public class BankSystem {
         else
             System.out.println("\nNot enough balance in your account!\nPress any key to continue.");
         Utils.pause();
-        showMenu(MenuPage.MENU_LOGGEDIN);
     }
 
     private void menuDeposit() {
         if(currentUser == null)
-            showMenu(MenuPage.MAIN);
+            return;
         Utils.clearConsole();
         println("Current balance: " + currentUser.getBalanceString() + CURRENCY_SYMBOL + "\n");
         print("Deposit amount: ");
@@ -121,7 +118,6 @@ public class BankSystem {
         currentUser.addBalance(input);
         println("\n" + Utils.formatMoney(input) + CURRENCY_SYMBOL + " have been added to your account.\nPress any key to continue.");
         Utils.pause();
-        showMenu(MenuPage.MENU_LOGGEDIN);
     }
 
     private void menuRegister() {
@@ -130,7 +126,7 @@ public class BankSystem {
         print("Username: ");
         String inputUsername = ScannerUtils.nextLine();
         if(inputUsername.equals("!q"))
-            showMenu(MenuPage.MAIN);
+            return;
         if(users.containsKey(inputUsername.toLowerCase())) {
             println("Username already taken! Please choose another one! Press any key to restart.");
             Utils.pause();
@@ -149,7 +145,6 @@ public class BankSystem {
         BankAccount newAccount = new BankAccount(inputUsername, HashUtils.hash(inputPassword), new BigDecimal(0));
         users.put(inputUsername.toLowerCase(), newAccount);
         currentUser = newAccount;
-        showMenu(MenuPage.MENU_LOGGEDIN);
     }
 
     private void menuLogin() {
@@ -158,7 +153,7 @@ public class BankSystem {
         print("Username: ");
         String inputUsername = ScannerUtils.nextLine();
         if(inputUsername.equals("!q"))
-            showMenu(MenuPage.MAIN);
+            return;
         print("Password: ");
         String inputPassword = ScannerUtils.nextLine();
 
@@ -167,12 +162,11 @@ public class BankSystem {
             BankAccount user = users.get(idUsername);
             if(user.checkPassword(inputPassword)) {
                 currentUser = user;
-                showMenu(MenuPage.MENU_LOGGEDIN);
+                return;
             }
         }
         println("Wrong username or password! Press any key to continue!");
         Utils.pause();
-        showMenu(MenuPage.MAIN);
     }
 
     private void menuMain() {
@@ -189,8 +183,8 @@ public class BankSystem {
             case 1: showMenu(MenuPage.REGISTER); break;
             case 2: showMenu(MenuPage.LOGIN); break;
             case 3: System.exit(0);
-            default: menuMain();
         }
+        menuMain();
     }
 
     private void menuLoggedIn() {
@@ -214,13 +208,12 @@ public class BankSystem {
             case 4: showMenu(MenuPage.PASSWD_CHANGE); break;
             case 5: logout(); break;
             case 6: delete(); break;
-            default: menuLoggedIn();
         }
+        menuLoggedIn();
     }
 
     private void logout() {
         currentUser = null;
-        showMenu(MenuPage.MAIN);
     }
 
     private void delete() {
@@ -228,7 +221,6 @@ public class BankSystem {
             users.remove(currentUser.getUsername().toLowerCase());
             currentUser = null;
         }
-        showMenu(MenuPage.MAIN);
     }
 
     private String invalidPasswordMessage() {
