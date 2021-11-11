@@ -13,6 +13,7 @@ public class BankSystem {
     private HashMap<String, BankAccount> users = new HashMap<>();
 
     private final static int MIN_PASS_LENGTH = 4;
+    private final static String CURRENCY_SYMBOL = "$";
 
     enum MenuPage { MAIN, MENU_LOGGEDIN, REGISTER, LOGIN, WITHDRAW, DEPOSIT}
 
@@ -26,7 +27,30 @@ public class BankSystem {
             case MENU_LOGGEDIN: menuLoggedIn();
             case REGISTER: menuRegister();
             case LOGIN: menuLogin();
+            case WITHDRAW: menuWithdraw();
+            case DEPOSIT: menuDeposit();
         }
+    }
+
+    private void menuWithdraw() {
+        if(currentUser == null)
+            showMenu(MenuPage.MAIN);
+        Utils.clearConsole();
+        println("Current balance: " + currentUser.getBalance() + "\n");
+    }
+
+    private void menuDeposit() {
+        if(currentUser == null)
+            showMenu(MenuPage.MAIN);
+        Utils.clearConsole();
+        println("Current balance: " + currentUser.getBalance() + "\n");
+        print("Deposit amount: ");
+        BigDecimal input = ScannerUtils.nextBigDecimal();
+        currentUser.addBalance(input);
+        Utils.clearConsole();
+        println(input + CURRENCY_SYMBOL + " have been added to your account. Press any key to continue");
+        Utils.pause();
+        showMenu(MenuPage.MENU_LOGGEDIN);
     }
 
     private void menuRegister() {
@@ -101,7 +125,7 @@ public class BankSystem {
 
         Utils.clearConsole();
         println("Welcome " + currentUser.getUsername() + "!\n");
-        println("Current balance: " + currentUser.getBalance());
+        println("Current balance: " + currentUser.getBalance() + CURRENCY_SYMBOL);
         println("1] Withdraw");
         println("2] Deposit");
         println("3] Logout");

@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Scanner;
 
+//https://github.com/SvenWollinger/ScanScan
 public class ScannerUtils {
     private static Scanner scanner = null;
 

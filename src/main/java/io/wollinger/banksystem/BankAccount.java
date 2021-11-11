@@ -21,6 +21,10 @@ public class BankAccount {
         return pinHash;
     }
 
+    public void addBalance(BigDecimal amount) {
+        balance = balance.add(amount);
+    }
+
     public BigDecimal getBalance() {
         return balance;
     }
