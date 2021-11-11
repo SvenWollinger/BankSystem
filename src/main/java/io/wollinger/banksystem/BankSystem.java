@@ -6,6 +6,7 @@ import io.wollinger.banksystem.utils.Utils;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.Locale;
 
 public class BankSystem {
     private BankAccount currentUser;
@@ -33,7 +34,7 @@ public class BankSystem {
         println("Register\n");
         print("Username: ");
         String inputUsername = ScannerUtils.nextLine();
-        if(users.containsKey(inputUsername)) {
+        if(users.containsKey(inputUsername.toLowerCase())) {
             println("Username already taken! Please choose another one! Press any key to restart.");
             Utils.pause();
             menuRegister();
@@ -48,7 +49,7 @@ public class BankSystem {
         }
 
         BankAccount newAccount = new BankAccount(inputUsername, HashUtils.hash(inputPassword), new BigDecimal(0));
-        users.put(inputUsername, newAccount);
+        users.put(inputUsername.toLowerCase(), newAccount);
         currentUser = newAccount;
         showMenu(MenuPage.MENU_LOGGEDIN);
     }
@@ -61,9 +62,11 @@ public class BankSystem {
         print("Password: ");
         String inputPassword = ScannerUtils.nextLine();
 
-        if(users.containsKey(inputUsername)) {
-            if(HashUtils.authenticate(inputPassword, users.get(inputUsername).getPasswordHash())) {
-                currentUser = users.get(inputUsername);
+        String idUsername = inputUsername.toLowerCase();
+        if(users.containsKey(idUsername)) {
+            BankAccount user = users.get(idUsername);
+            if(HashUtils.authenticate(inputPassword, user.getPasswordHash())) {
+                currentUser = user;
                 showMenu(MenuPage.MENU_LOGGEDIN);
             }
         }
