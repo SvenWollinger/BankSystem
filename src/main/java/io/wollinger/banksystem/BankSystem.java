@@ -165,10 +165,12 @@ public class BankSystem {
         println("BankSystem by SvenWollinger\n");
         println("1] Register");
         println("2] Login");
+        println("3] Exit");
         final int input = ScannerUtils.nextInt();
         switch(input) {
             case 1: showMenu(MenuPage.REGISTER); break;
             case 2: showMenu(MenuPage.LOGIN); break;
+            case 3: System.exit(0);
             default: menuMain();
         }
     }
