@@ -24,7 +24,9 @@ public class ScannerUtils {
 
     public static String next() {
         ensureScanner();
-        return scanner.next();
+        String input = scanner.next();
+        scanner.nextLine();
+        return input;
     }
 
     public static int nextInt() {
