@@ -3,7 +3,7 @@ package io.wollinger.banksystem;
 import java.math.BigDecimal;
 
 public class BankAccount {
-    private String username;
+    private final String username;
     private String pinHash;
     private BigDecimal balance;
 
@@ -29,8 +29,12 @@ public class BankAccount {
         balance = balance.add(amount);
     }
 
-    public void removeBalance(BigDecimal amount) {
-        balance = balance.subtract(amount);
+    public boolean removeBalance(BigDecimal amount) {
+        switch(balance.compareTo(amount)) {
+            case 0:
+            case 1: balance = balance.subtract(amount); return true;
+        }
+        return false;
     }
 
     public BigDecimal getBalance() {

@@ -20,7 +20,10 @@ public class BankSystem {
     enum MenuPage { MAIN, MENU_LOGGEDIN, REGISTER, LOGIN, WITHDRAW, DEPOSIT, TRANSFER, PASSWD_CHANGE}
 
     public BankSystem() {
-
+        if(Main.DEBUG) {
+            users.put("sven", new BankAccount("Sven", HashUtils.hash("test!"), new BigDecimal("100")));
+            users.put("jess", new BankAccount("jess", HashUtils.hash("test%"), new BigDecimal("42.50")));
+        }
     }
 
     public void showMenu(MenuPage page) {
@@ -40,6 +43,28 @@ public class BankSystem {
         if(currentUser == null)
             showMenu(MenuPage.MAIN);
         Utils.clearConsole();
+
+        println("Transfer\n");
+        println("Available balance: " + currentUser.getBalance() + CURRENCY_SYMBOL + "\n");
+        print("Receiver username: ");
+        String receiver = ScannerUtils.nextLine();
+        if(!users.containsKey(receiver.toLowerCase())) {
+            println("\nUser does not exist! Press any key to try again.");
+            Utils.pause();
+            menuTransfer();
+        }
+        BankAccount receiverAccount = users.get(receiver);
+        println("Amount to send: ");
+        BigDecimal amount = ScannerUtils.nextBigDecimal();
+        if(currentUser.removeBalance(amount) && receiverAccount != null) {
+            receiverAccount.addBalance(amount);
+            println("\nSuccess! " + amount + CURRENCY_SYMBOL + " have beent sent to " + receiver + "!");
+            println("Press any key to continue.");
+        } else {
+            println("\nNot enough balance!\nPress any key to continue.");
+        }
+        Utils.pause();
+        showMenu(MenuPage.MENU_LOGGEDIN);
     }
 
     private void menuPasswordChange() {
@@ -78,17 +103,10 @@ public class BankSystem {
         println("Current balance: " + currentUser.getBalance() + CURRENCY_SYMBOL + "\n");
         print("Withdraw amount: ");
         BigDecimal input = ScannerUtils.nextBigDecimal();
-        switch(currentUser.getBalance().compareTo(input)) {
-            case 0:
-            case 1:
-                currentUser.removeBalance(input);
-                println("\n" + input + CURRENCY_SYMBOL + " have been taken from your account!\nRemaining balance: " + currentUser.getBalance() + CURRENCY_SYMBOL + ".\nPress any key to continue.");
-                break;
-            case -1:
-            case 3:
-                System.out.println("\nNot enough balance in your account!\nPress any key to continue.");
-                break;
-        }
+        if(currentUser.removeBalance(input))
+            println("\n" + input + CURRENCY_SYMBOL + " have been taken from your account!\nRemaining balance: " + currentUser.getBalance() + CURRENCY_SYMBOL + ".\nPress any key to continue.");
+        else
+            System.out.println("\nNot enough balance in your account!\nPress any key to continue.");
         Utils.pause();
         showMenu(MenuPage.MENU_LOGGEDIN);
     }
