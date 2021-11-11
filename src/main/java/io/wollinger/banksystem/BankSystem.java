@@ -100,11 +100,11 @@ public class BankSystem {
         if(currentUser == null)
             showMenu(MenuPage.MAIN);
         Utils.clearConsole();
-        println("Current balance: " + currentUser.getBalance() + CURRENCY_SYMBOL + "\n");
+        println("Current balance: " + currentUser.getBalanceString() + CURRENCY_SYMBOL + "\n");
         print("Withdraw amount: ");
         BigDecimal input = ScannerUtils.nextBigDecimal();
         if(currentUser.removeBalance(input))
-            println("\n" + input + CURRENCY_SYMBOL + " have been taken from your account!\nRemaining balance: " + currentUser.getBalance() + CURRENCY_SYMBOL + ".\nPress any key to continue.");
+            println("\n" + input + CURRENCY_SYMBOL + " have been taken from your account!\nRemaining balance: " + currentUser.getBalanceString() + CURRENCY_SYMBOL + ".\nPress any key to continue.");
         else
             System.out.println("\nNot enough balance in your account!\nPress any key to continue.");
         Utils.pause();
@@ -115,11 +115,11 @@ public class BankSystem {
         if(currentUser == null)
             showMenu(MenuPage.MAIN);
         Utils.clearConsole();
-        println("Current balance: " + currentUser.getBalance() + CURRENCY_SYMBOL + "\n");
+        println("Current balance: " + currentUser.getBalanceString() + CURRENCY_SYMBOL + "\n");
         print("Deposit amount: ");
         BigDecimal input = ScannerUtils.nextBigDecimal();
         currentUser.addBalance(input);
-        println("\n" + input + CURRENCY_SYMBOL + " have been added to your account.\nPress any key to continue.");
+        println("\n" + Utils.formatMoney(input) + CURRENCY_SYMBOL + " have been added to your account.\nPress any key to continue.");
         Utils.pause();
         showMenu(MenuPage.MENU_LOGGEDIN);
     }
@@ -199,7 +199,7 @@ public class BankSystem {
 
         Utils.clearConsole();
         println("Welcome " + currentUser.getUsername() + "!\n");
-        println("Current balance: " + currentUser.getBalance() + CURRENCY_SYMBOL);
+        println("Current balance: " + currentUser.getBalanceString() + CURRENCY_SYMBOL);
         println("1] Withdraw");
         println("2] Deposit");
         println("3] Transfer");

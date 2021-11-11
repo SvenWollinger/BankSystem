@@ -1,6 +1,10 @@
 package io.wollinger.banksystem;
 
+import io.wollinger.banksystem.utils.Utils;
+
 import java.math.BigDecimal;
+import java.text.NumberFormat;
+import java.util.Locale;
 
 public class BankAccount {
     private final String username;
@@ -39,6 +43,10 @@ public class BankAccount {
 
     public BigDecimal getBalance() {
         return balance;
+    }
+
+    public String getBalanceString() {
+        return Utils.formatMoney(balance);
     }
 
     @Override
