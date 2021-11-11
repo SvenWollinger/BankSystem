@@ -3,11 +3,11 @@ package io.wollinger.banksystem;
 import io.wollinger.banksystem.utils.ScannerUtils;
 import io.wollinger.banksystem.utils.Utils;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 public class BankSystem {
     private BankAccount currentUser;
-    private ArrayList<BankAccount> users = new ArrayList<>();
+    private HashMap<String, BankAccount> users = new HashMap<>();
 
     enum MenuPage { MAIN, MENU_LOGGEDIN, REGISTER, LOGIN, WITHDRAW, DEPOSIT}
 
@@ -19,7 +19,32 @@ public class BankSystem {
         switch(page) {
             case MAIN: menuMain();
             case MENU_LOGGEDIN: menuLoggedIn();
+            case REGISTER: menuRegister();
+            case LOGIN: menuLogin();
         }
+    }
+
+    private void menuRegister() {
+        Utils.clearConsole();
+        println("Register\n");
+        print("Username: ");
+        String inputUsername = ScannerUtils.nextLine();
+        if(users.containsKey(inputUsername)) {
+            println("Username already taken! Please choose another one! Press any key to restart.");
+            menuRegister();
+        }
+
+        print("Password: ");
+        String inputPassword = ScannerUtils.nextLine();
+        if(inputPassword.length() < 10) {
+            println("Password needs to be atleast 10 characters! Press any key to restart.");
+            Utils.pause();
+            menuRegister();
+        }
+    }
+
+    private void menuLogin() {
+
     }
 
     private void menuMain() {
@@ -44,6 +69,7 @@ public class BankSystem {
 
         Utils.clearConsole();
         println("Welcome " + currentUser.getUsername() + "\n");
+        println("Current balance: " + currentUser.getBalance());
         println("1] Withdraw");
         println("2] Deposit");
         println("3] Logout");
@@ -52,10 +78,19 @@ public class BankSystem {
         switch(input) {
             case 1: showMenu(MenuPage.WITHDRAW); break;
             case 2: showMenu(MenuPage.DEPOSIT); break;
-            case 3: currentUser = null; showMenu(MenuPage.MAIN);
-            case 4: break; //TODO: Delete
+            case 3: logout(); break;
+            case 4: delete(); break;
             default: menuLoggedIn();
         }
+    }
+
+    private void logout() {
+        currentUser = null;
+        showMenu(MenuPage.MAIN);
+    }
+
+    private void delete() {
+        //TODO: Add code
     }
 
     private void println(String string) {

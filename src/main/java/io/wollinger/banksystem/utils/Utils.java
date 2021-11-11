@@ -12,4 +12,11 @@ public class Utils {
             e.printStackTrace();
         }
     }
+    public static void pause() {
+        try {
+            new ProcessBuilder("cmd", "/c", "pause>nul").inheritIO().start().waitFor();
+        } catch (InterruptedException | IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
