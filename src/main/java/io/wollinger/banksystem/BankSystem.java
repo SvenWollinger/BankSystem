@@ -1,8 +1,10 @@
 package io.wollinger.banksystem;
 
+import io.wollinger.banksystem.utils.HashUtils;
 import io.wollinger.banksystem.utils.ScannerUtils;
 import io.wollinger.banksystem.utils.Utils;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 
 public class BankSystem {
@@ -31,6 +33,7 @@ public class BankSystem {
         String inputUsername = ScannerUtils.nextLine();
         if(users.containsKey(inputUsername)) {
             println("Username already taken! Please choose another one! Press any key to restart.");
+            Utils.pause();
             menuRegister();
         }
 
@@ -41,6 +44,11 @@ public class BankSystem {
             Utils.pause();
             menuRegister();
         }
+
+        BankAccount newAccount = new BankAccount(inputUsername, HashUtils.hash(inputPassword), new BigDecimal(0));
+        users.put(inputUsername, newAccount);
+        currentUser = newAccount;
+        showMenu(MenuPage.MENU_LOGGEDIN);
     }
 
     private void menuLogin() {
@@ -68,7 +76,7 @@ public class BankSystem {
             showMenu(MenuPage.MAIN);
 
         Utils.clearConsole();
-        println("Welcome " + currentUser.getUsername() + "\n");
+        println("Welcome " + currentUser.getUsername() + "!\n");
         println("Current balance: " + currentUser.getBalance());
         println("1] Withdraw");
         println("2] Deposit");
