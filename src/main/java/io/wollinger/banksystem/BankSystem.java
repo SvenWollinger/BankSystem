@@ -43,11 +43,11 @@ public class BankSystem {
             case 0:
             case 1:
                 currentUser.removeBalance(input);
-                System.out.println(input + CURRENCY_SYMBOL + " have been taken from your account!\nRemaining balance: " + currentUser.getBalance() + CURRENCY_SYMBOL + ".\nPress any key to continue!");
+                println("\n" + input + CURRENCY_SYMBOL + " have been taken from your account!\nRemaining balance: " + currentUser.getBalance() + CURRENCY_SYMBOL + ".\nPress any key to continue.");
                 break;
             case -1:
             case 3:
-                System.out.println("Not enough balance in your account! Press any key to continue!");
+                System.out.println("\nNot enough balance in your account!\nPress any key to continue.");
                 break;
         }
         Utils.pause();
@@ -62,8 +62,7 @@ public class BankSystem {
         print("Deposit amount: ");
         BigDecimal input = ScannerUtils.nextBigDecimal();
         currentUser.addBalance(input);
-        Utils.clearConsole();
-        println(input + CURRENCY_SYMBOL + " have been added to your account. Press any key to continue");
+        println("\n" + input + CURRENCY_SYMBOL + " have been added to your account.\nPress any key to continue.");
         Utils.pause();
         showMenu(MenuPage.MENU_LOGGEDIN);
     }
