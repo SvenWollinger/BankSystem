@@ -1,9 +1,13 @@
 plugins {
     id 'java'
+    id 'application'
 }
 
-group 'org.example'
-version '1.0-SNAPSHOT'
+application {
+    getMainClass().set("io.wollinger.banksystem.Main")
+}
+
+group 'io.wollinger'
 
 repositories {
     mavenCentral()
@@ -11,9 +15,17 @@ repositories {
 
 dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
-    testRuntimeOnly <'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
 }
 
 test {
     useJUnitPlatform()
+}
+
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'io.wollinger.banksystem.Main'
+        )
+    }
 }
