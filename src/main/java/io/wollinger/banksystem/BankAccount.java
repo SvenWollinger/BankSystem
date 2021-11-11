@@ -25,6 +25,10 @@ public class BankAccount {
         balance = balance.add(amount);
     }
 
+    public void removeBalance(BigDecimal amount) {
+        balance = balance.subtract(amount);
+    }
+
     public BigDecimal getBalance() {
         return balance;
     }

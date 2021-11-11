@@ -36,14 +36,29 @@ public class BankSystem {
         if(currentUser == null)
             showMenu(MenuPage.MAIN);
         Utils.clearConsole();
-        println("Current balance: " + currentUser.getBalance() + "\n");
+        println("Current balance: " + currentUser.getBalance() + CURRENCY_SYMBOL + "\n");
+        print("Withdraw amount: ");
+        BigDecimal input = ScannerUtils.nextBigDecimal();
+        switch(currentUser.getBalance().compareTo(input)) {
+            case 0:
+            case 1:
+                currentUser.removeBalance(input);
+                System.out.println(input + CURRENCY_SYMBOL + " have been taken from your account!\nRemaining balance: " + currentUser.getBalance() + CURRENCY_SYMBOL + ".\nPress any key to continue!");
+                break;
+            case -1:
+            case 3:
+                System.out.println("Not enough balance in your account! Press any key to continue!");
+                break;
+        }
+        Utils.pause();
+        showMenu(MenuPage.MENU_LOGGEDIN);
     }
 
     private void menuDeposit() {
         if(currentUser == null)
             showMenu(MenuPage.MAIN);
         Utils.clearConsole();
-        println("Current balance: " + currentUser.getBalance() + "\n");
+        println("Current balance: " + currentUser.getBalance() + CURRENCY_SYMBOL + "\n");
         print("Deposit amount: ");
         BigDecimal input = ScannerUtils.nextBigDecimal();
         currentUser.addBalance(input);
