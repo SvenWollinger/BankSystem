@@ -1,10 +1,12 @@
 package io.wollinger.banksystem;
 
+import io.wollinger.banksystem.utils.DBUtils;
 import io.wollinger.banksystem.utils.HashUtils;
 import io.wollinger.banksystem.utils.ScannerUtils;
 import io.wollinger.banksystem.utils.Utils;
 
 import java.math.BigDecimal;
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.HashMap;
 
@@ -20,6 +22,10 @@ public class BankSystem {
     enum MenuPage { MAIN, MENU_LOGGEDIN, REGISTER, LOGIN, WITHDRAW, DEPOSIT, TRANSFER, PASSWD_CHANGE}
 
     public BankSystem() {
+        DBUtils.init();
+        for(BankAccount account : DBUtils.getAccountsFromDB()) {
+            users.put(account.getUsername().toLowerCase(), account);
+        }
         if(Main.DEBUG) {
             users.put("sven", new BankAccount("Sven", HashUtils.hash("test!"), new BigDecimal("100")));
             users.put("jess", new BankAccount("jess", HashUtils.hash("test%"), new BigDecimal("42.50")));
@@ -64,6 +70,7 @@ public class BankSystem {
             println("\nNot enough balance!\nPress any key to continue.");
         }
         Utils.pause();
+        saveToDB();
     }
 
     private void menuPasswordChange() {
@@ -92,6 +99,7 @@ public class BankSystem {
         currentUser.setPasswordHash(HashUtils.hash(newPassword));
         println("\nDone! Press any key to continue.");
         Utils.pause();
+        saveToDB();
     }
 
     private void menuWithdraw() {
@@ -106,6 +114,7 @@ public class BankSystem {
         else
             System.out.println("\nNot enough balance in your account!\nPress any key to continue.");
         Utils.pause();
+        saveToDB();
     }
 
     private void menuDeposit() {
@@ -118,6 +127,7 @@ public class BankSystem {
         currentUser.addBalance(input);
         println("\n" + Utils.formatMoney(input) + CURRENCY_SYMBOL + " have been added to your account.\nPress any key to continue.");
         Utils.pause();
+        saveToDB();
     }
 
     private void menuRegister() {
@@ -145,6 +155,7 @@ public class BankSystem {
         BankAccount newAccount = new BankAccount(inputUsername, HashUtils.hash(inputPassword), new BigDecimal(0));
         users.put(inputUsername.toLowerCase(), newAccount);
         currentUser = newAccount;
+        saveToDB();
     }
 
     private void menuLogin() {
@@ -220,6 +231,12 @@ public class BankSystem {
         if(currentUser != null) {
             users.remove(currentUser.getUsername().toLowerCase());
             currentUser = null;
+        }
+    }
+
+    private void saveToDB() {
+        for (String key : users.keySet()) {
+                users.get(key).saveToDB();
         }
     }
 
