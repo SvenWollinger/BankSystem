@@ -5,10 +5,10 @@ It saves the password hashed in a hopefully safe way.
 
 Please do not use my implementation here for anything serious though :^).
 
-# Building
+## Building
 To build this simply run gradle build, it will output the jar to /builds/libs/BankSystem.jar.
 
-# Running
+## Running
 This application runs purely in the Windows command prompt.
 
 License
