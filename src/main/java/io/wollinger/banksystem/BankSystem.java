@@ -54,7 +54,7 @@ public class BankSystem {
             menuTransfer();
         }
         BankAccount receiverAccount = users.get(receiver);
-        println("Amount to send: ");
+        print("Amount to send: ");
         BigDecimal amount = ScannerUtils.nextBigDecimal();
         if(currentUser.removeBalance(amount) && receiverAccount != null) {
             receiverAccount.addBalance(amount);
