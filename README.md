@@ -1,5 +1,5 @@
 # BankSystem
-A client side only bank system written for my Apprentinceship.
+A client side only bank system written for my apprenticeship.
 
 It saves the password hashed in a hopefully safe way.
 
